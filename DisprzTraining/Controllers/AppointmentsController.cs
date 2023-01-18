@@ -21,7 +21,7 @@ namespace DisprzTraining.Controllers
         /// Sample request:
         ///
         ///      day : "2023-01-23"(yyyy-mm-dd)
-        ///      month : "2023-01-23"(yyyy-mm-dd)
+        ///      month : "2023-01"(yyyy-mm)
         ///
         /// </remarks>
         /// <response code="200"> Returns a Dictionary data with key as integer and value as a list of appointments </response>

@@ -6,13 +6,13 @@
     <members>
         <member name="M:DisprzTraining.Controllers.AppointmentsController.Get(DisprzTraining.Models.Request)">
              <summary>
-             Return a list of appointments.
+             Return appointments.
              </summary>
             <remarks>
              Sample request:
             
                   day : "2023-01-23"(yyyy-mm-dd)
-                  month : "2023-01-23"(yyyy-mm-dd)
+                  month : "2023-01"(yyyy-mm)
             
              </remarks>
              <response code="200"> Returns a Dictionary data with key as integer and value as a list of appointments </response>
@@ -55,7 +55,7 @@
         </member>
         <member name="M:DisprzTraining.Controllers.AppointmentsController.Delete(System.Guid)">
              <summary>
-             Deletes a existing appointment.
+             Deletes an existing appointment.
              </summary>
              <remarks>
              Sample request:
