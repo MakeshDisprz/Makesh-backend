@@ -9,6 +9,7 @@
       "DisprzTraining.Tests/1.0.0": {
         "dependencies": {
           "DisprzTraining": "1.0.0",
+          "FluentAssertions": "6.8.0",
           "Microsoft.NET.Test.Sdk": "17.3.2",
           "Moq": "4.18.3",
           "coverlet.collector": "3.1.2",
@@ -31,6 +32,17 @@
         }
       },
       "coverlet.collector/3.1.2": {},
+      "FluentAssertions/6.8.0": {
+        "dependencies": {
+          "System.Configuration.ConfigurationManager": "6.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/FluentAssertions.dll": {
+            "assemblyVersion": "6.8.0.0",
+            "fileVersion": "6.8.0.0"
+          }
+        }
+      },
       "Humanizer.Core/2.2.0": {
         "dependencies": {
           "NETStandard.Library": "1.6.1"
@@ -1531,6 +1543,17 @@
           "Swashbuckle.AspNetCore.SwaggerUI": "6.4.0"
         }
       },
+      "Swashbuckle.AspNetCore.Annotations/6.4.0": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.4.0"
+        },
+        "runtime": {
+          "lib/net6.0/Swashbuckle.AspNetCore.Annotations.dll": {
+            "assemblyVersion": "6.4.0.0",
+            "fileVersion": "6.4.0.0"
+          }
+        }
+      },
       "Swashbuckle.AspNetCore.Swagger/6.4.0": {
         "dependencies": {
           "Microsoft.OpenApi": "1.4.3"
@@ -2422,7 +2445,8 @@
           "Microsoft.AspNetCore.OpenApi": "7.0.0",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "7.0.0",
-          "Swashbuckle.AspNetCore": "6.4.0"
+          "Swashbuckle.AspNetCore": "6.4.0",
+          "Swashbuckle.AspNetCore.Annotations": "6.4.0"
         },
         "runtime": {
           "DisprzTraining.dll": {}
@@ -2449,6 +2473,13 @@
       "sha512": "sha512-wuLDIDKD5XMt0A7lE31JPenT7QQwZPFkP5rRpdJeblyXZ9MGLI8rYjvm5fvAKln+2/X+4IxxQDxBtwdrqKNLZw==",
       "path": "coverlet.collector/3.1.2",
       "hashPath": "coverlet.collector.3.1.2.nupkg.sha512"
+    },
+    "FluentAssertions/6.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NfSlAG97wMxS48Ov+wQEhJITdn4bKrgtKrG4sCPrFBVKozpC57lQ2vzsPdxUOsPbfEgEQTMtvCDECxIlDBfgNA==",
+      "path": "fluentassertions/6.8.0",
+      "hashPath": "fluentassertions.6.8.0.nupkg.sha512"
     },
     "Humanizer.Core/2.2.0": {
       "type": "package",
@@ -2995,6 +3026,13 @@
       "sha512": "sha512-eUBr4TW0up6oKDA5Xwkul289uqSMgY0xGN4pnbOIBqCcN9VKGGaPvHX3vWaG/hvocfGDP+MGzMA0bBBKz2fkmQ==",
       "path": "swashbuckle.aspnetcore/6.4.0",
       "hashPath": "swashbuckle.aspnetcore.6.4.0.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Annotations/6.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-frMa+jf9YVpCiMN+mFehfEdgQ7QEqLrhNssNmPwAgfXbdLwedQiVpBpoq+20dImdeNbN7RgY12soH2DvEzSaqw==",
+      "path": "swashbuckle.aspnetcore.annotations/6.4.0",
+      "hashPath": "swashbuckle.aspnetcore.annotations.6.4.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore.Swagger/6.4.0": {
       "type": "package",

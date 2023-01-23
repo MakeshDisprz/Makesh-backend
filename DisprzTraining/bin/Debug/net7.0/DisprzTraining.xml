@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DisprzTraining</name>
+    </assembly>
+    <members>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Get(DisprzTraining.Models.Request)">
+            <summary>
+            Return appointments.
+            </summary>
+            <response code="200"> Returns list of appointments </response>
+            <response code="404">No appointments found - returns empty list</response>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Post(DisprzTraining.Models.CreateAppointmentDto)">
+            <summary>
+            Creates a new appointment.
+            </summary>
+            <response code="201">Returns the newly created appointment's id</response>
+            <response code="409">Conflict-returns list of appointments with conflict</response>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Put(DisprzTraining.Models.AppointmentDto)">
+            <summary>
+            Updates an existing appointment.
+            </summary>
+            <response code="204">Update successful</response>
+            <response code="409">Conflict-returns list of appointments with conflict</response>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Delete(System.Guid)">
+            <summary>
+            Deletes an existing appointment.
+            </summary>
+            <response code="204">Appointment deleted successfully</response>
+            <response code="404">Appointment not found</response>
+        </member>
+    </members>
+</doc>

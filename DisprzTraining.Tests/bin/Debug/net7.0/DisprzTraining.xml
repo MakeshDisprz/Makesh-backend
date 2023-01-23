@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DisprzTraining</name>
+    </assembly>
+    <members>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Get(DisprzTraining.Models.Request)">
+             <summary>
+             Return appointments.
+             </summary>
+            <remarks>
+             Sample request:
+            
+                  'http://localhost:5169/v1/api/appointments?Day=2023-01-23'
+            
+             </remarks>
+             <param name="request">Here is the description for ID.</param>
+             <response code="200"> Returns a Dictionary data with key as integer and value as a list of appointments </response>
+             <response code="404">No appointments found</response>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Post(DisprzTraining.Models.CreateAppointmentDto)">
+             <summary>
+             Creates a new appointment.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 {
+                    "title": "string",
+                    "startTime": "2023-01-02T09:33:03.125",
+                    "endTime": "2023-01-02T09:33:03.125"
+                 }
+            
+             </remarks>
+             <response code="201">Returns the newly created appointment</response>
+             <response code="409">If there is a conflict</response>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Put(DisprzTraining.Models.AppointmentDto)">
+             <summary>
+             Updates an existing appointment.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 {
+                    "id": "8d6812c7-348b-419f-b6f9-d626b6c1d363",
+                    "title": "string",
+                    "startTime": "2023-01-02T09:33:03.125",
+                    "endTime": "2023-01-02T09:33:03.125"
+                 }
+            
+             </remarks>
+        </member>
+        <member name="M:DisprzTraining.Controllers.AppointmentsController.Delete(System.Guid)">
+             <summary>
+             Deletes an existing appointment.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                    id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            
+             </remarks>
+             <response code="204">Appointment deleted successfully</response>
+             <response code="404">Appointment is not found</response>
+        </member>
+    </members>
+</doc>
