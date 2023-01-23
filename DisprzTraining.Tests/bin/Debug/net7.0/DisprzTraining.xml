@@ -11,10 +11,10 @@
             <remarks>
              Sample request:
             
-                  day : "2023-01-23"(yyyy-mm-dd)
-                  month : "2023-01"(yyyy-mm)
+                  'http://localhost:5169/v1/api/appointments?Day=2023-01-23'
             
              </remarks>
+             <param name="request">Here is the description for ID.</param>
              <response code="200"> Returns a Dictionary data with key as integer and value as a list of appointments </response>
              <response code="404">No appointments found</response>
         </member>
@@ -50,8 +50,6 @@
                  }
             
              </remarks>
-             <response code="201">Returns the updated appointment</response>
-             <response code="409">If there is a conflict</response>
         </member>
         <member name="M:DisprzTraining.Controllers.AppointmentsController.Delete(System.Guid)">
              <summary>

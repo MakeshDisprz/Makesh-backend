@@ -13,6 +13,7 @@ namespace DisprzTraining.Business
             _appointmentDAL = appointmentDAL;
         }
 
+
         public async Task<AppointmentDto> CreateAsync(CreateAppointmentDto appointmentDto)
         {
             Appointment appointment = new()
@@ -22,9 +23,21 @@ namespace DisprzTraining.Business
                 StartTime = appointmentDto.StartTime.ToLocalTime(),
                 EndTime = appointmentDto.EndTime.ToLocalTime()
             };
-            var check = await _appointmentDAL.Create(appointment);
-            return check ? appointment.AsDto() : null;
+            return (await _appointmentDAL.Create(appointment)).AsDto();
         }
+
+
+        public async Task<List<AppointmentDto>> ConflictValidate(DateTime startTime, DateTime endTime)
+        {
+            return (await _appointmentDAL.ConflictValidate(startTime, endTime)).Select(appointment => appointment.AsDto()).ToList();
+        }
+
+
+        public async Task<List<AppointmentDto>> UpdateValidate(Guid id, DateTime startTime, DateTime endTime)
+        {
+            return (await _appointmentDAL.UpdateValidate(id, startTime, endTime)).Select(appointment => appointment.AsDto()).ToList();
+        }
+
 
         public async Task<AppointmentDto> UpdateAsync(AppointmentDto appointmentDto)
         {
@@ -35,64 +48,19 @@ namespace DisprzTraining.Business
                 StartTime = appointmentDto.StartTime.ToLocalTime(),
                 EndTime = appointmentDto.EndTime.ToLocalTime()
             };
-            var check = await _appointmentDAL.Update(appointment);
-            return check ? appointment.AsDto() : null;
+            return (await _appointmentDAL.Update(appointment)).AsDto();
         }
+
 
         public Task<bool> Delete(Guid Id)
         {
-            var check = _appointmentDAL.Delete(Id);
-            return check;
+            return _appointmentDAL.Delete(Id);
         }
 
-        public async Task<IDictionary<int, List<AppointmentDto>>> GetAsync(Request request)
+
+        public async Task<List<AppointmentDto>> GetAsync(Request request)
         {
-
-            IDictionary<int, List<AppointmentDto>> appointments = new Dictionary<int, List<AppointmentDto>>();
-
-            var appointmentDtos = (await _appointmentDAL.Get(request))
-                    .Select(appointment => appointment.AsDto()).ToList();
-
-            if (request.Day != DateTime.MinValue && request.Month == DateTime.MinValue)
-            {
-                foreach (var item in appointmentDtos)
-                {
-                    int id = item.StartTime.Hour;
-                    if (appointments.ContainsKey(id))
-                    {
-                        appointments[id].Add(item);
-                    }
-                    else
-                    {
-                        appointments.Add(id, new List<AppointmentDto>());
-                        appointments[id].Add(item);
-                    }
-                }
-                return appointments;
-            }
-
-            else if (request.Day == DateTime.MinValue && request.Month != DateTime.MinValue)
-            {
-                foreach (var item in appointmentDtos)
-                {
-                    int id = item.StartTime.Day;
-                    if (appointments.ContainsKey(id))
-                    {
-                        appointments[id].Add(item);
-                    }
-                    else
-                    {
-                        appointments.Add(id, new List<AppointmentDto>());
-                        appointments[id].Add(item);
-                    }
-                }
-                return appointments;
-            }
-            
-            else{
-                return appointments;
-            }
+            return (await _appointmentDAL.Get(request)).Select(appointment => appointment.AsDto()).ToList();
         }
-
     }
 }

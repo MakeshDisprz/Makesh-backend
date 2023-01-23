@@ -9643,11 +9643,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\DisprzTraining.csproj",
+      "projectUniqueName": "C:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\DisprzTraining.csproj",
       "projectName": "DisprzTraining",
-      "projectPath": "c:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\DisprzTraining.csproj",
+      "projectPath": "C:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\DisprzTraining.csproj",
       "packagesPath": "C:\\Users\\makesh.r_disprz\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\obj\\",
+      "outputPath": "C:\\Users\\makesh.r_disprz\\Desktop\\DisprzTraining\\DisprzTraining\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\makesh.r_disprz\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -4,9 +4,16 @@ namespace DisprzTraining.DataAccess
 {
     public interface IAppointmentDAL
     {
-        Task<bool> Create(Appointment appointment);
+        Task<Appointment> Create(Appointment appointment);
+
         Task<List<Appointment>> Get( Request request);
-        Task<bool> Update(Appointment appointment);
+
+        Task<Appointment> Update(Appointment appointment);
+
         Task<bool> Delete(Guid Id);
+
+        Task<List<Appointment>> ConflictValidate(DateTime startTime, DateTime endTime);
+        
+        Task<List<Appointment>> UpdateValidate(Guid id, DateTime startTime, DateTime endTime);
     }
 }
