@@ -8,6 +8,7 @@
             <summary>
             Return appointments.
             </summary>
+            <param name="request">Example value : "2023-01-25"</param>
             <response code="200"> Returns list of appointments </response>
             <response code="404">No appointments found - returns empty list</response>
         </member>
@@ -22,13 +23,14 @@
             <summary>
             Updates an existing appointment.
             </summary>
-            <response code="204">Update successful</response>
+            <response code="200">Update successful</response>
             <response code="409">Conflict-returns list of appointments with conflict</response>
         </member>
         <member name="M:DisprzTraining.Controllers.AppointmentsController.Delete(System.Guid)">
             <summary>
             Deletes an existing appointment.
             </summary>
+            <param name="Id">Example value : "3fa85f64-5717-4562-b3fc-2c963f66afa6"</param>
             <response code="204">Appointment deleted successfully</response>
             <response code="404">Appointment not found</response>
         </member>

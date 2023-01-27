@@ -1,5 +1,6 @@
 using DisprzTraining.DataAccess;
 using DisprzTraining.Models;
+using DisprzTraining.UnitTests.Fixtures;
 using FluentAssertions;
 
 namespace DisprzTraining.UnitTests.DataAccess;
@@ -12,8 +13,15 @@ public class AppointmentDALTests
     {
         // Arrange
         Request request = new Request();
+        Request request1 = new Request();
+        Request request2 = new Request();
+        Request request3 = new Request();
+        
         request.Day = new DateTime(2022, 12, 30, 5, 10, 20);
-        // request.Month = DateTime.MinValue;
+        request1.Month = new DateTime(2022, 12, 30, 5, 10, 20);
+        request3.Day = new DateTime(2022, 12, 30, 5, 10, 20);
+        request3.Month = new DateTime(2022, 12, 30, 5, 10, 20);
+
         List<Appointment> appointments = new List<Appointment>(){
             new Appointment{
                 Id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d361"),
@@ -32,9 +40,24 @@ public class AppointmentDALTests
 
         // Act
         var result = await mockAppointmentDAL.Get(request);
+        var result1 = await mockAppointmentDAL.Get(request1);
+        var result2 = await mockAppointmentDAL.Get(request2);
+        var result3 = await mockAppointmentDAL.Get(request3);
 
         // Assert
         result.Should().BeEquivalentTo(
+                   appointments,
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
+               );
+        result1.Should().BeEquivalentTo(
+                   AppointmentFixture.GetAppointment(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
+               );
+        result2.Should().BeEquivalentTo(
+                   AppointmentFixture.GetAppointment(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
+               );
+        result3.Should().BeEquivalentTo(
                    appointments,
                    options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
                );
@@ -45,16 +68,23 @@ public class AppointmentDALTests
     {
         // Arrange
         Request request = new Request();
+        Request request1 = new Request();
         request.Day = new DateTime(2022, 12, 28, 5, 10, 20);
+        request1.Month = new DateTime(2022, 10, 30, 5, 10, 20);
         // request.Month = DateTime.MinValue;
         List<Appointment> appointments = new List<Appointment>();
         var mockAppointmentDAL = new AppointmentDAL();
 
         // Act
         var result = await mockAppointmentDAL.Get(request);
+        var result1 = await mockAppointmentDAL.Get(request1);
 
         // Assert
         result.Should().BeEquivalentTo(
+                   appointments,
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
+               );
+        result1.Should().BeEquivalentTo(
                    appointments,
                    options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers()
                );

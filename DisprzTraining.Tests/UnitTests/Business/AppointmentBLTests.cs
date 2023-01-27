@@ -16,7 +16,7 @@ public class AppointmentBLTests
         // Arrange
         Request request = new Request();
         request.Day = new DateTime();
-        var appointments = AppointmentFixture.GetAppointments();
+        var appointments = AppointmentFixture.GetAppointment();
         var appointmentDtos = (appointments.Select(s => s.AsDto())).ToList();
         var mockAppointmentDAL = new Mock<IAppointmentDAL>();
 
@@ -31,6 +31,10 @@ public class AppointmentBLTests
 
         // Assert
         result.Should().BeOfType<List<AppointmentDto>>();// 1
+
+        result.Should().BeEquivalentTo(
+                   AppointmentFixture.GetAppointment(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers());//2
     }
 
     [Fact]
@@ -55,6 +59,10 @@ public class AppointmentBLTests
 
         // Assert
         result.Should().BeOfType<List<AppointmentDto>>();// 1
+
+        result.Should().BeEquivalentTo(
+                   AppointmentFixture.GetAppointments(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers());//2
     }
 
     [Fact]
@@ -63,7 +71,7 @@ public class AppointmentBLTests
         // Arrange
         Request request = new Request();
         request.Day = DateTime.MinValue;
-        // request.Month = new DateTime(2022, 12, 30, 5, 10, 20);
+        request.Month = new DateTime(2022, 12, 30, 5, 10, 20);
         var appointments = AppointmentFixture.GetAppointments();
         var appointmentDtos = (appointments.Select(s => s.AsDto())).ToList();
         var mockAppointmentDAL = new Mock<IAppointmentDAL>();
@@ -79,19 +87,23 @@ public class AppointmentBLTests
 
         // Assert
         result.Should().BeOfType<List<AppointmentDto>>();// 1
+
+        result.Should().BeEquivalentTo(
+                   AppointmentFixture.GetAppointments(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers());//2
     }
 
     [Fact]
     public async Task Delete_Boolean()
     {
         // Arrange
-        var boo = false;
+        var check = false;
         Guid id = new Guid();
         var mockAppointmentBL = new Mock<IAppointmentDAL>();
 
         mockAppointmentBL
             .Setup(s => s.Delete(id))
-            .Returns(Task.FromResult(boo));
+            .Returns(Task.FromResult(check));
 
         var sut = new AppointmentBL(mockAppointmentBL.Object);
 
@@ -99,7 +111,7 @@ public class AppointmentBLTests
         var result = await sut.Delete(id);
 
         // Assert
-        Assert.Equal(boo, result);
+        Assert.Equal(check, result);
     }
 
     [Fact]
@@ -133,6 +145,9 @@ public class AppointmentBLTests
 
         // Assert
         result.Should().BeOfType<AppointmentDto>();// 1
+        result.Should().BeEquivalentTo(
+                   appointment.AsDto(),
+                   options => options.ComparingByMembers<Appointment>().ExcludingMissingMembers());//2
     }
 
     [Fact]
@@ -146,9 +161,13 @@ public class AppointmentBLTests
             EndTime = new DateTime(2022, 12, 30, 6, 10, 20)
         };
 
+        var appointments = AppointmentFixture.GetAppointments();
+        var appointmentDtos = (appointments.Select(s => s.AsDto())).ToList();
+
         var mockAppointmentBL = new Mock<IAppointmentDAL>();
+        
         mockAppointmentBL
-            .Setup(s => s.ConflictValidate(appointmentDto.StartTime, appointmentDto.EndTime))
+            .Setup(s => s.ConflictValidate(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .Returns(Task.FromResult(new List<Appointment>()));
 
         var sut = new AppointmentBL(mockAppointmentBL.Object);
@@ -173,13 +192,13 @@ public class AppointmentBLTests
 
         var mockAppointmentBL = new Mock<IAppointmentDAL>();
         mockAppointmentBL
-            .Setup(s => s.UpdateValidate(appointment.Id ,appointment.StartTime, appointment.EndTime))
+            .Setup(s => s.UpdateValidate(appointment.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
             .Returns(Task.FromResult(new List<Appointment>()));
 
         var sut = new AppointmentBL(mockAppointmentBL.Object);
 
         // Act
-        var result = await sut.UpdateValidate(appointment.Id ,appointment.StartTime, appointment.EndTime);
+        var result = await sut.UpdateValidate(appointment.Id, appointment.StartTime, appointment.EndTime);
 
         // Assert
         result.Should().BeOfType<List<AppointmentDto>>();// 1
@@ -189,13 +208,6 @@ public class AppointmentBLTests
     public async Task UpdateAsync_UpdatedAppointment()
     {
         // Arrange
-        AppointmentDto appointmentDto = new AppointmentDto
-        {
-            Id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360"),
-            Title = "A1",
-            StartTime = new DateTime(2022, 12, 30, 5, 10, 20),
-            EndTime = new DateTime(2022, 12, 30, 6, 10, 20)
-        };
         Appointment appointment = new Appointment
         {
             Id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360"),
@@ -211,7 +223,7 @@ public class AppointmentBLTests
         var sut = new AppointmentBL(mockAppointmentBL.Object);
 
         // Act
-        var result = await sut.UpdateAsync(appointmentDto);
+        var result = await sut.UpdateAsync(appointment.AsDto());
 
         // Assert
         result.Should().BeOfType<AppointmentDto>();// 1

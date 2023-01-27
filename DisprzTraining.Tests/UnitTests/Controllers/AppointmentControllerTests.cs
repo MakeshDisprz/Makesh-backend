@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using DisprzTraining.UnitTests.Fixtures;
 using Microsoft.AspNetCore.Http;
+using DisprzTraining.Responses;
 
 namespace DisprzTraining.UnitTests.Controllers;
 
@@ -29,12 +30,12 @@ public class AppointmentControllerTests
         var result = await sut.Get(request);
 
         // Assert
-        var okResult = result as ObjectResult;
 
-        Assert.NotNull(okResult);
-        Assert.True(okResult is OkObjectResult);
-        Assert.IsType<List<AppointmentDto>>(okResult.Value);
-        Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
+        result.Should().BeOfType<OkObjectResult>();// 1
+
+        var objectResult = (ObjectResult)result;
+        objectResult.Value.Should().BeOfType<List<AppointmentDto>>();// 
+        objectResult.StatusCode.Should().Be(200);
 
     }
 
@@ -57,8 +58,8 @@ public class AppointmentControllerTests
         var result = await sut.Get(request);
 
         // Assert
-        result.Should().BeOfType<NotFoundResult>();
-        var objectResult = (NotFoundResult)result;
+        result.Should().BeOfType<NotFoundObjectResult>();
+        var objectResult = (NotFoundObjectResult)result;
         objectResult.StatusCode.Should().Be(404);
 
     }
@@ -98,7 +99,11 @@ public class AppointmentControllerTests
         var result = await sut.Post(dto);
 
         // Assert
-        result.Should().BeOfType<CreatedAtActionResult>();
+        result.Should().BeOfType<CreatedAtActionResult>();// 1
+
+        var objectResult = (ObjectResult) result;
+
+        objectResult.Value.Should().BeOfType<Created>();// 2
 
     }
 
@@ -106,17 +111,10 @@ public class AppointmentControllerTests
     public async Task Post_EmptyInput_BadRequest()
     {
         // Arrange
-        Guid id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360");
         string T = "DailySyncUp";
         DateTime Start = new DateTime(2023, 12, 30, 5, 10, 20);
         DateTime End = new DateTime(2023, 12, 30, 6, 10, 20);
-        Appointment appointment1 = new Appointment
-        {
-            Id = id,
-            Title = T,
-            StartTime = Start,
-            EndTime = End
-        };
+       
         CreateAppointmentDto dto = new CreateAppointmentDto
         {
             Title = T,
@@ -126,17 +124,17 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.CreateAsync(It.IsAny<CreateAppointmentDto>()))
-            .ReturnsAsync(appointment1.AsDto());
-
         var sut = new AppointmentsController(mockAppointment.Object);
 
         // Act
         var result = await sut.Post(dto);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult) result;
+
+        objectResult.Value.Should().BeOfType<EmptyError>();// 2
 
     }
 
@@ -144,17 +142,10 @@ public class AppointmentControllerTests
     public async Task Post_EndLessThanStart_BadRequest()
     {
         // Arrange
-        Guid id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360");
         string T = "DailySyncUp";
         DateTime Start = new DateTime(2023, 12, 30, 8, 10, 20);
         DateTime End = new DateTime(2023, 12, 30, 6, 10, 20);
-        Appointment appointment1 = new Appointment
-        {
-            Id = id,
-            Title = T,
-            StartTime = Start,
-            EndTime = End
-        };
+
         CreateAppointmentDto dto = new CreateAppointmentDto
         {
             Title = T,
@@ -164,17 +155,17 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.CreateAsync(It.IsAny<CreateAppointmentDto>()))
-            .ReturnsAsync(appointment1.AsDto());
-
         var sut = new AppointmentsController(mockAppointment.Object);
 
         // Act
         var result = await sut.Post(dto);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult) result;
+
+        objectResult.Value.Should().BeOfType<EarlyError>();// 2
 
     }
 
@@ -182,17 +173,41 @@ public class AppointmentControllerTests
     public async Task Post_DifferentDay_BadRequest()
     {
         // Arrange
-        Guid id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360");
         string T = "DailySyncUp";
         DateTime Start = new DateTime(2023, 10, 29, 5, 10, 20);
         DateTime End = new DateTime(2024, 11, 30, 6, 10, 20);
-        Appointment appointment1 = new Appointment
+        
+        CreateAppointmentDto dto = new CreateAppointmentDto
         {
-            Id = id,
             Title = T,
             StartTime = Start,
             EndTime = End
         };
+
+        var mockAppointment = new Mock<IAppointmentBL>();
+        
+        var sut = new AppointmentsController(mockAppointment.Object);
+
+        // Act
+        var result = await sut.Post(dto);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult) result;
+
+        objectResult.Value.Should().BeOfType<DayError>();// 2
+
+    }
+
+    [Fact]
+    public async Task Post_PastTime_BadRequest()
+    {
+        // Arrange
+        string T = "DailySyncUp";
+        DateTime Start = new DateTime(2023, 01, 27, 5, 10, 20);
+        DateTime End = new DateTime(2023, 01, 27, 6, 10, 20);
+        
         CreateAppointmentDto dto = new CreateAppointmentDto
         {
             Title = T,
@@ -202,17 +217,17 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.CreateAsync(It.IsAny<CreateAppointmentDto>()))
-            .ReturnsAsync(appointment1.AsDto());
-
         var sut = new AppointmentsController(mockAppointment.Object);
 
         // Act
         var result = await sut.Post(dto);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult) result;
+
+        objectResult.Value.Should().BeOfType<PastError>();// 2
 
     }
 
@@ -258,10 +273,12 @@ public class AppointmentControllerTests
         var objectResult = (ConflictObjectResult)result;
 
         objectResult.StatusCode.Should().Be(409);// 2
+
+        objectResult.Value.Should().BeOfType<Conflicts>();// 3
     }
 
     [Fact]
-    public async Task Put_204()
+    public async Task Put_200()
     {
         // Arrange
         Guid id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360");
@@ -292,11 +309,14 @@ public class AppointmentControllerTests
         var result = await sut.Put(appointment);
 
         // Assert
-        result.Should().BeOfType<NoContentResult>();// 1
+        result.Should().BeOfType<OkObjectResult>();// 1
 
-        var objectResult = (NoContentResult)result;
+        var objectResult = (OkObjectResult)result;
 
-        objectResult.StatusCode.Should().Be(204);// 2
+        objectResult.StatusCode.Should().Be(200);// 2
+
+        objectResult.Value.Should().BeOfType<Updated>();// 3
+
     }
 
     [Fact]
@@ -318,17 +338,17 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.UpdateAsync(appointment))
-            .ReturnsAsync(appointment);
-
         var sut = new AppointmentsController(mockAppointment.Object);
 
         // Act
         var result = await sut.Put(appointment);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();// 1
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult)result;
+
+        objectResult.Value.Should().BeOfType<EmptyError>();// 2
 
     }
 
@@ -351,9 +371,38 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.UpdateAsync(appointment))
-            .ReturnsAsync(appointment);
+        var sut = new AppointmentsController(mockAppointment.Object);
+
+        // Act
+        var result = await sut.Put(appointment);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult)result;
+
+        objectResult.Value.Should().BeOfType<EarlyError>();// 2
+
+    }
+
+    [Fact]
+    public async Task Put_PastTime_BadRequest()
+    {
+        // Arrange
+        Guid id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d360");
+        string title = "DailySyncUp";
+        DateTime Start = new DateTime(2023, 01, 27, 5, 10, 20);
+        DateTime End = new DateTime(2023, 01, 27, 7, 10, 20);
+
+        AppointmentDto appointment = new AppointmentDto
+        {
+            Id = id,
+            Title = title,
+            StartTime = Start,
+            EndTime = End
+        };
+
+        var mockAppointment = new Mock<IAppointmentBL>();
 
         var sut = new AppointmentsController(mockAppointment.Object);
 
@@ -361,7 +410,11 @@ public class AppointmentControllerTests
         var result = await sut.Put(appointment);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();// 1
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult)result;
+
+        objectResult.Value.Should().BeOfType<PastError>();// 2
 
     }
 
@@ -384,17 +437,17 @@ public class AppointmentControllerTests
 
         var mockAppointment = new Mock<IAppointmentBL>();
 
-        mockAppointment
-            .Setup(s => s.UpdateAsync(appointment))
-            .ReturnsAsync(appointment);
-
         var sut = new AppointmentsController(mockAppointment.Object);
 
         // Act
         var result = await sut.Put(appointment);
 
         // Assert
-        result.Should().BeOfType<BadRequestResult>();// 1
+        result.Should().BeOfType<BadRequestObjectResult>();// 1
+
+        var objectResult = (ObjectResult)result;
+
+        objectResult.Value.Should().BeOfType<DayError>();// 2
 
     }
 

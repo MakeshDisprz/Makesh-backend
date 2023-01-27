@@ -29,13 +29,15 @@ namespace DisprzTraining.Business
 
         public async Task<List<AppointmentDto>> ConflictValidate(DateTime startTime, DateTime endTime)
         {
-            return (await _appointmentDAL.ConflictValidate(startTime, endTime)).Select(appointment => appointment.AsDto()).ToList();
+            return (await _appointmentDAL.ConflictValidate(startTime.ToLocalTime(), endTime.ToLocalTime()))
+                    .Select(appointment => appointment.AsDto()).ToList();
         }
 
 
         public async Task<List<AppointmentDto>> UpdateValidate(Guid id, DateTime startTime, DateTime endTime)
         {
-            return (await _appointmentDAL.UpdateValidate(id, startTime, endTime)).Select(appointment => appointment.AsDto()).ToList();
+            return (await _appointmentDAL.UpdateValidate(id, startTime.ToLocalTime(), endTime.ToLocalTime()))
+                    .Select(appointment => appointment.AsDto()).ToList();
         }
 
 

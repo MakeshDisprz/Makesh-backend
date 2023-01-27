@@ -5,7 +5,7 @@ namespace DisprzTraining.DataAccess
     public class AppointmentDAL : IAppointmentDAL
     {
 
-        private readonly static List<Appointment> appointments = new List<Appointment>{
+        public static List<Appointment> appointments = new List<Appointment>{
             new Appointment{
                 Id = new Guid("8d6812c7-348b-419f-b6f9-d626b6c1d361"),
                 Title = "M1",
@@ -92,7 +92,12 @@ namespace DisprzTraining.DataAccess
 
         public Task<List<Appointment>> Get(Request request)
         {
-            var newAppointments = appointments.Where(s => s.StartTime.Date == request.Day.ToLocalTime().Date).ToList();
+             var newAppointments = request.Day != DateTime.MinValue ? 
+             appointments.Where(s => s.StartTime.Date == request.Day.ToLocalTime().Date).ToList()
+             : request.Month != DateTime.MinValue ? 
+             appointments.Where(s => (s.StartTime.Year == request.Month.ToLocalTime().Year) && (s.StartTime.Month == request.Month.ToLocalTime().Month)).ToList()
+             : appointments;
+             
             return Task.FromResult(newAppointments);
         }
     }
